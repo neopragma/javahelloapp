@@ -238,6 +238,40 @@ To keep things simple, it's a generally-accepted good practice for all team memb
 1. Push to origin (master branch)
 1. Check feedback from the CI build and fix if broken
  
+We just ran all tests locally. Let's see if we need to pull any changes from origin.
+
+```shell  
+git status
+```
+
+You'll see output like this:
+
+```shell  
+Daves-MacBook-Pro:springboot-tutorial dave$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+nothing to commit, working directory clean
+```
+
+This means we don't have to merge any changes from origin that someone else might have pushed while we were working. We're good to go.
+
+Let's push our changes.
+
+```shell  
+git push -u origin master
+```
+
+Okay. Now all we have to do is wait for the CI server to run the build. It should start automatically when it detects something was pushed to the version control system.
+
+Tick, tock, tick, tock. Hmm. Nothing is happening.
+
+Oh, wait a second. We forgot to set up the CI server. 
+
+But isn't that someone else's job? Some sort of infrastructure team, or something?
+
+Actually, it isn't someone else's job. If we're the development team, then all aspects of development are part of our job. So, let's get busy!
+
+## 6. Setting up continuous integration
 
 
  
