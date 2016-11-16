@@ -374,4 +374,164 @@ Now you can press Commit and Push in the lower right-hand area of the Git Stagin
 
 Now if you head back over to Travis CI in a browser, you'll see that the CI build was started in response to this push. So, the IDE seamlessly ties into the CI pipeline.
 
+## 11. Write a driver for a standalone Java application
+
+The sample code from the original tutorial has a ```main``` method to run the code as a standalone Java application. We're treating that as a separate concern. Let's write a separate class now with a ```main``` method and have it drive the ```Hello``` class. 
+
+Here there's an opportunity for a discussion about TDD. Should we test-drive the Main class? Some people would argue that every line of production code must be test-driven. Others would say this code is so trivial and so standardized that there's nothing to be gained by test-driving it. It will instantiate a ```Hello``` object and call one method with no arguments, and then exit. That's all. 
+
+### 11.1. The Main class
+
+Let's risk the ire of purists and just write this one.
+
+```java  
+package com.nepragma.springboot;
+public class Main {	
+	static Hello hello;
+	public static void main(String[] args) {
+		hello = new Hello();
+		System.out.println(hello.greet());
+		System.exit(0);
+	}
+}
+```
+
+Show them how to run this from inside the IDE. 
+
+### 11.2. Create an executable jar
+
+The way to package a standalone Java application is as an _executable jar_. Let's do that using Maven.
+
+One of the advantages of using Springboot is that it comes with a well-implemented Maven plugin to build executable jars. It works better than the usual ```maven-assembly-plugin``` or ```maven-jar-plugin``` that you may have used in the past.
+
+To include it, add this ```plugin``` declaration to the ```pom.xml``` file:
+
+```shell  
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+```
+
+You can create the executable jar from the command line like this:
+
+```shell
+mvn package
+```
+
+You can also build it from within the IDE. Spring Tool Suite comes with several Maven run configurations predefined, but they don't include one for ```mvn package```. Show participants how to create a new run configuration.
+
+![Maven package](images/mvn-package-run-config.png "Maven package")
+
+Note that by using the Springboot Maven plugin, you've made the application compatible with Cloud Foundry. Show participants the project properties in Spring Tool Suite:
+
+![Properties](images/cloud-foundry-standalone.png "Properties")
+
+### 11.3. Run the application
+
+Now you can use that run configuration to create the executable jar from within the IDE using the "Run as..." option from the context menu.
+
+To execute the resulting application from the command line, use:
+
+```shell
+java -jar hello-0.0.1-SNAPSHOT.jar
+```
+
+To execute it from within the IDE, open the context menu and choose Run as... Java application.
+
+### 11.4 Create a .gitignore file
+
+When we imported the project into Sprint Tool Suite, some IDE-specific files were created in the project directory that we don't want to store in version control. 
+
+The IDE doesn't show hidden files by default. You can make it do so, but it isn't very intuitive. Show participants how to do this. 
+
+First, locate the nearly-invisible drop-down menu button near the upper right-hand corner of the Package Explorer tab.
+
+![Explorer menu](images/explorer-menu-icon.png "Package Explorer menu")
+
+Choose Filters... to open a dialog where you can control which files appear in Package Explorer. 
+
+![Filters](images/java-element-filters.png "Filters")
+
+Instead of choosing which files to display, you're choosing which files _not_ to display. The entry ```.*resources``` is already checked. Uncheck it to make the IDE show hidden files in Package Explorer.
+
+Show participants how to create a ```.gitignore``` file (or edit the one Springboot generated) to control which files will be committed to version control.
+
+Run a ```git status``` command on the command line to see which files git is watching.
+
+```shell
+git status
+```
+
+When the author tried this on his laptop, the output from ```git status``` was:
+
+```shell  
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   .DS_Store
+	modified:   README.md
+	modified:   pom.xml
+	deleted:    src/main/java/Hello.java
+	deleted:    target/classes/Hello.class
+	modified:   target/maven-archiver/pom.properties
+	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+	modified:   target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+	deleted:    target/myproject-0.0.1-SNAPSHOT.jar
+	modified:   target/surefire-reports/HelloTest.txt
+	modified:   target/surefire-reports/TEST-HelloTest.xml
+	modified:   target/test-classes/HelloTest.class
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	.classpath
+	.gitignore
+	.project
+	.settings/
+	images/mvn-package-run-config.png
+	src/main/java/com/nepragma/springboot/Main.java
+	src/main/java/com/nepragma/springboot/package-info.java
+	src/test/java/com/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+The ```.DS_Store``` file is created by Mac OSX when you access files. We don't need to keep it in version control. If you're using a different operating system, you won't see that filename in the list.
+
+We don't need anything in the ```target``` directory, as that directory is created as part of the build. We only keep sources and resource files under version control.
+
+The files ```.classpath```, ```.project``` and the director ```.settings``` are generated and used by Spring Tool Suite (actually, by the underlying Eclipse IDE). They are specific to the local development environment and are not part of the application source code, so we don't keep them under version control.
+
+To prevent these files from being stored in git, we put the following entries in ```.gitignore```:
+
+```shell  
+.DS_Store
+target
+.classpath
+.project
+.settings
+```
+
+If you're using another operating system, you might see temporary files specific to that system that you'll want to include in ```.gitignore``` as well. For example, when you edit a file on Ubuntu Linux using the default text editor, it creates a temporary file with a tilde on the end of its name. Editing a file named ```MyClass.java``` will cause another file to be created, named ```MyClass.java~```. You can use wildcards in the filenames in ```.gitignore``` to prevent those files from being included:
+
+```shell  
+*~
+```
+
+You _do_ want the ```.gitignore``` file itself to be maintained under version control.
+
+### 11.5 Commit, push, and build
+
+Now commit and push the changes and watch the build run in Travis CI.
+
+## 13. Wrap the Hello functionality as a RESTful service
 

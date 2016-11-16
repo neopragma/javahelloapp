@@ -1,3 +1,4 @@
+package com.neopragma.springboot;
 import org.junit.Test;
 
 import com.nepragma.springboot.Hello;
