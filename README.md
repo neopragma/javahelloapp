@@ -457,7 +457,7 @@ Choose Filters... to open a dialog where you can control which files appear in P
 
 ![Filters](images/java-element-filters.png "Filters")
 
-Instead of choosing which files to display, you're choosing which files _not_ to display. The entry ```.*resources``` is already checked. Uncheck it to make the IDE show hidden files in Package Explorer.
+Instead of choosing which files to display, you're choosing which files _not_ to display. The entry ```.* resources``` is already checked. Uncheck it to make the IDE show hidden files in Package Explorer.
 
 Show participants how to create a ```.gitignore``` file (or edit the one Springboot generated) to control which files will be committed to version control.
 
