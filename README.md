@@ -533,5 +533,66 @@ You _do_ want the ```.gitignore``` file itself to be maintained under version co
 
 Now commit and push the changes and watch the build run in Travis CI.
 
-## 13. Wrap the Hello functionality as a RESTful service
+## 12. Setting up continuous deployment
+
+Remind participants of the canonical delivery pipeline and/or the diagram showing loops within loops. We're going to extend the pipeline for our tutorial exercise to include automated deployment.
+
+Go to Heroku and define the tutorial app there, using your credentials or setting up new credentials as you please. This will be a _one-off dyno_ app to execute the standalone Java application we just built.
+
+Use the Travis and Heroku command line tools to create an encrypted API key for Heroku, like this:
+
+```shell  
+travis encrypt $(heroku auth:token) --add deploy.api_key
+```
+
+Edit the ```.travis.yml``` file and add a ```provider``` specification. The file should now look something like this:
+
+```shell
+language: java
+jdk:
+- oraclejdk8
+deploy:
+  provider: heroku
+  api_key:
+    secure: [a long encrypted value appears here]
+```
+
+Now when you commit and push the modified ```.travis.yml``` file to Github, the build will start on Travis CI and (assuming it worked) the application will be deployed to Heroku.
+
+Because this is a standalone application that runs in a one-off dyno, it will not start automatically and it will not remain operational when you execute it. Show the group how to run such an app on Heroku:
+
+```shell
+heroku run bash --app springboot-tutorial
+~ $ java -jar target/hello-0.0.1-SNAPSHOT.jar
+Hello, World!
+```
+
+## 13. Where do we stand?
+
+We've looked at several good development practices so far:
+
+1. Version control [check]
+1. Separation of concerns [check]
+1. Test-driven development [check]
+1. Continuous Integration [check]
+1. Static code analysis [not yet]
+1. Automated unit tests [check]
+1. Automated packaging [check]
+1. Automated integration, functional, and system tests [not yet]
+1. Automated deployment [check]
+1. Loose ends - javadoc comments, etc. [not yet]
+
+## 14. Some notes on application components and project structure
+
+The original sample code for the tutorial combines the "business logic" of saying Hello with code to drive a standalone application and code to build a RESTful microservice. We separated the first two components.
+
+In "real life" the ```hello``` jar file would be uploaded to a Nexus repository where it could be referenced as a _dependency_ in other projects. The repository could be the public Maven Central or a corporate repository behind a firewall, where virus-scanned and approved jars are maintained. 
+
+Rather than clutter a repository with jar files from tutorial exercises, we've left the ```hello``` jar as a source-level dependency within the ```springboot-tutorial``` project. 
+
+We'll create a separate project to build the RESTful service wrapper for the ```hello``` jar. For purposes of the tutorial, we'll just copy the ```hello``` code into that project. Bear in mind this is not the way to do things in "real life."
+
+## 15. Wrap the Hello functionality as a RESTful service
+
+Now let's play with some more of the functionality Springboot provides for us. We'll set up the Hello functionality as a RESTful microservice. Springboot offers some built-in help with that sort of thing.
 
