@@ -360,4 +360,18 @@ Highlight the project in Package Explorer, right-click to open the context menu,
 
 ![Team commit](images/team-commit.png "Team commit")
 
+In the Git Staging tab, move the filenames into the Staged Changes section that you want to commit. 
+
+![Staged changes](images/staged-changes.png "Staged changes")
+
+Type in an appropriate commit message.
+
+![Commit message](images/commit-message.png "Commit message")
+
+Now you can press Commit and Push in the lower right-hand area of the Git Staging tab.
+
+![Commit and push](images/commit-and-push.png "Commit and push")
+
+Now if you head back over to Travis CI in a browser, you'll see that the CI build was started in response to this push. So, the IDE seamlessly ties into the CI pipeline.
+
 
