@@ -273,6 +273,91 @@ Actually, it isn't someone else's job. If we're the development team, then all a
 
 ## 6. Setting up continuous integration
 
+The next loop in the TDD diagram after _test_ and _code_ is _integrate_. Let's set up the Hello project for continuous integration using Travis CI, an online service.
 
+Show participants how to sign up for Travis CI and connect their Github repository to it. Then show them how to add a ```.travis.yml``` file to the project, in the project root directory. Here's the minimum ```.travis.yml``` file for a Java 8 project:
+
+```shell  
+language: java
+jdk:
+  - oraclejdk8
+```
+
+Assuming you've set up the repository on Travis CI, when you push the ```.travis.yml``` file to the Github repo it will trigger a build on Travis.
+
+```shell  
+git add .travis.yml
+git commit -m "Added travis.yml file"
+git push -u origin master
+```
+
+Display the Travis site in a browser and let participants watch the progress of the build. It won't be as quick as a build on their own CI server, because Travis has to download all the dependencies. If they had their own instance of, say, Jenkins, then the dependencies would be cached in the local ```.m2/repository``` directory on the CI server. 
+
+Ultimately, you'll see the same Maven output on Travis as you see on the local box for ```mvn test```:
+
+```shell  
+Running HelloTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec - in HelloTest
+Results :
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+```
+
+## 7. Where do we stand?
+
+Now our project is set up to support test-driven development and continuous integration, but not continuous deployment. We don't yet have enough code in place to deploy anywhere; the ```Hello``` class is really a sort of "library" that can be wrapped by some sort of service or driver. 
+
+The tutorial example suggests two kinds of wrappers: A ```main``` driver to function as a standalone "batch" Java application, and a RESTful service.
+
+## 8. Using an Integrated Development Environment
+
+Before we build up any more code, let's move the project into an IDE. It's much more convenient to do serious Java development with an IDE than to use a bare-bones text editor and the command line. IDEs have useful features like code completion, refactoring, in-context javadoc display, boilerplate code generation, import management, stylistic suggestions, and color coding.
+
+You are free to use any IDE you wish. These instructions assume Spring Tool Suite will be used, because it's all based on a Springboot tutorial. This is only for general consistency; Spring Tool Suite isn't an absolute necessity.
+
+To import the project into Spring Tool Suite, start the IDE and right-click in the Package Explorer pane. Choose Import... and then Maven -> Existing Maven projects. 
+
+![Import Maven project](images/choose-maven-project.png "Import Maven project")
+
+ Select the root directory of the tutorial project.
  
+ ![Choose project root](images/choose-project-root-dir.png "Choose project root directory")
+ 
+It should look something like this:
+
+![Selected project](images/selected-project.png "Selected project")
+
+Now the tutorial project will show up in the Package Explorer pane. It will look something like this:
+
+![Directory tree](images/project-directory-tree.png "Project directory tree")
+
+Now show participants how to run ```mvn test``` from inside the IDE by right-clicking on ```pom.xml``` and choosing Maven -> Run as -> Maven test. You may have to adjust project settings to get it to use the correct JDK and JRE version.
+
+## 9. Creating packages
+
+So far all our code lives in the _default package_. This isn't very realistic. Let's define a Java package. (It's a good excuse to demonstrate the _refactoring_ features of the IDE.)
+
+You can use the keyboard shortcut for the platform you're using or the context menu in the Package Explorer pane in the IDE to choose Refactor -> Move for the file ```HelloTest.java```.
+
+![Refactor move](images/refactor-move.png "Refactor move")
+
+In the refactor dialog window, choose _Create Package_
+
+![Refactor dialog](images/refactor-dialog.png "Refactor dialog")
+
+Give the package whatever name you want, or that your participants choose. 
+
+![Create package](images/create-package.png "Create package")
+
+Do the same for the ```Hello.java``` file.
+
+## 10. Commit to version control from inside the IDE
+
+Now run the tests from inside the IDE. Right-click on ```pom.xml``` and choose Run as... Maven -> Maven test.
+
+Looks good. Let's commit to version control from inside the IDE.
+
+Highlight the project in Package Explorer, right-click to open the context menu, and choose Team -> Commit...
+
+![Team commit](images/team-commit.png "Team commit")
+
 

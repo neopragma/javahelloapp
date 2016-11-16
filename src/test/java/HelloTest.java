@@ -1,4 +1,7 @@
 import org.junit.Test;
+
+import com.nepragma.springboot.Hello;
+
 import static org.junit.Assert.assertEquals;
 
 public class HelloTest {    
