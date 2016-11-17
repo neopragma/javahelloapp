@@ -36,7 +36,7 @@ Follow the tutorial section 11.1 to create the ```pom.xml``` file using the comm
 
 Run ```mvn package``` and ```mvn dependency:tree``` as described in the tutorial.
 
-Explain what a pom is, if necessary, and explain the parent pom named sprint-boot-starter-parent.
+Explain what a pom is, if necessary, and explain the parent pom named spring-boot-starter-parent.
 
 Follow the tutorial section 11.2 to add the dependencies to the pom. Run ```mvn dependency:tree``` again as described in the tutorial instructions.
 
@@ -304,9 +304,19 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 
 ## 7. Where do we stand?
 
-Now our project is set up to support test-driven development and continuous integration, but not continuous deployment. We don't yet have enough code in place to deploy anywhere; the ```Hello``` class is really a sort of "library" that can be wrapped by some sort of service or driver. 
+We've looked at several good development practices so far:
 
-The tutorial example suggests two kinds of wrappers: A ```main``` driver to function as a standalone "batch" Java application, and a RESTful service.
+1. Version control [check]
+1. Single branch strategy [check]
+1. Separation of concerns [check]
+1. Test-driven development [check]
+1. Continuous Integration [check]
+1. Static code analysis [not yet]
+1. Automated unit tests [check]
+1. Automated packaging [not yet]
+1. Automated integration, functional, and system tests [not yet]
+1. Automated deployment [not yet]
+1. Loose ends - javadoc comments, etc. [not yet]
 
 ## 8. Using an Integrated Development Environment
 
@@ -431,6 +441,8 @@ Note that by using the Springboot Maven plugin, you've made the application comp
 
 ![Properties](images/cloud-foundry-standalone.png "Properties")
 
+This doesn't mean we _must_ deploy to Cloud Foundry. It's only a convenience built into Spring Tool Suite to support Cloud Foundry. In fact, we'll be deploying to Heroku later in this exercise (because it's free).
+
 ### 11.3. Run the application
 
 Now you can use that run configuration to create the executable jar from within the IDE using the "Run as..." option from the context menu.
@@ -445,7 +457,7 @@ To execute it from within the IDE, open the context menu and choose Run as... Ja
 
 ### 11.4 Create a .gitignore file
 
-When we imported the project into Sprint Tool Suite, some IDE-specific files were created in the project directory that we don't want to store in version control. 
+When we imported the project into Spring Tool Suite, some IDE-specific files were created in the project directory that we don't want to store in version control. 
 
 The IDE doesn't show hidden files by default. You can make it do so, but it isn't very intuitive. Show participants how to do this. 
 
@@ -509,7 +521,7 @@ The ```.DS_Store``` file is created by Mac OSX when you access files. We don't n
 
 We don't need anything in the ```target``` directory, as that directory is created as part of the build. We only keep sources and resource files under version control.
 
-The files ```.classpath```, ```.project``` and the director ```.settings``` are generated and used by Spring Tool Suite (actually, by the underlying Eclipse IDE). They are specific to the local development environment and are not part of the application source code, so we don't keep them under version control.
+The files ```.classpath```, ```.project``` and the directory ```.settings``` are generated and used by Spring Tool Suite (actually, by the underlying Eclipse IDE). They are specific to the local development environment and are not part of the application source code, so we don't keep them under version control.
 
 To prevent these files from being stored in git, we put the following entries in ```.gitignore```:
 
@@ -572,6 +584,7 @@ Hello, World!
 We've looked at several good development practices so far:
 
 1. Version control [check]
+1. Single branch strategy [check]
 1. Separation of concerns [check]
 1. Test-driven development [check]
 1. Continuous Integration [check]
@@ -592,7 +605,4 @@ Rather than clutter a repository with jar files from tutorial exercises, we've l
 
 We'll create a separate project to build the RESTful service wrapper for the ```hello``` jar. For purposes of the tutorial, we'll just copy the ```hello``` code into that project. Bear in mind this is not the way to do things in "real life."
 
-## 15. Wrap the Hello functionality as a RESTful service
-
-Now let's play with some more of the functionality Springboot provides for us. We'll set up the Hello functionality as a RESTful microservice. Springboot offers some built-in help with that sort of thing.
-
+The tutorial continues in http://github.com/neopragma/hello-service.
