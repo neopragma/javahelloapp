@@ -1,4 +1,4 @@
-package com.nepragma.springboot;
+package com.neopragma.springboot;
 
 public class Main {
 	

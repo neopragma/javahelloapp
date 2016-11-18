@@ -8,7 +8,7 @@ Walk through a simple development exercise that demonstrates several general goo
 
 •	Online tutorial page: http://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-first-application.html
 
-•	PowerPoint deck: spring-boot-tutorial.pptx
+•	PowerPoint deck: tdd-ci-cd-walkthrough.pptx
 
 ## 3. Overview
 
