@@ -226,6 +226,14 @@ heroku run bash --app javahelloapp
 Hello, World!
 ```
 
+If you created a wrapper script, you can run it like this:
+
+```shell
+heroku run bash --app javahelloapp
+~ $ ./run
+Hello, World!
+```
+
 ## 13. Where do we stand?
 
 We've looked at several good development practices so far:
