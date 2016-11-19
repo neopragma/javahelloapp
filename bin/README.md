@@ -30,7 +30,7 @@ In part 2 (this project), we'll address the following aspects:
 Still to come:
 
 * Writing a RESTful microservice in Java suitable for cloud deployment
-* Separating _unit_ and _integration_ tests in Maven
+* Organizing an automated test suite
 
 ## 15. Resources
 
