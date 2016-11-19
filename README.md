@@ -221,7 +221,7 @@ Now when you commit and push the modified ```.travis.yml``` file to Github, the 
 Because this is a standalone application that runs in a one-off dyno, it will not start automatically and it will not remain operational when you execute it. Show the group how to run such an app on Heroku:
 
 ```shell
-heroku run bash --app springboot-tutorial
+heroku run bash --app javahelloapp
 ~ $ java -jar target/javahelloapp-0.0.1-SNAPSHOT.jar
 Hello, World!
 ```
