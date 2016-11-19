@@ -1,6 +1,10 @@
 # TDD/CI/CD Walkthrough Facilitator's Guide
 
-This project supports part 2 of a 3-part demonstration/walkthrough/dojo exercise.
+This project supports part 1 of a 3-part demonstration/walkthrough/dojo exercise. By the end of the series, you'll have a reusable jar containing the "Hello, World!" functionality, a standalone Java app, a RESTful microservice, and a working CI/CD pipeline.
+
+* Part 1 - http://github.com/neopragma/javahellolib 
+* Part 2 - javahelloapp (You are here)
+* Part 3 - http://github.com/neopragma/javahelloservice
 
 ## 14. Purpose and overview
 
@@ -22,11 +26,11 @@ In part 2 (this project), we'll address the following aspects:
 * Packaging applications for deployment
 * Setting up continuous deployment
 * Writing a standalone Java application suitable for cloud deployment
-* Organizing an automated test suite
 
 Still to come:
 
 * Writing a RESTful microservice in Java suitable for cloud deployment
+* Organizing an automated test suite
 
 ## 15. Resources
 
@@ -49,7 +53,7 @@ We want to use Spring Boot to help us package the standalone application for dep
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.neopragma.springboot</groupId>
+    <groupId>com.neopragma.javahelloapp</groupId>
     <artifactId>hello</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -84,16 +88,22 @@ We want to use Spring Boot to help us package the standalone application for dep
 
 Notice this POM declares a _parent_ POM. It's _spring-boot-starter-parent_, which declares components of Spring Boot that are helpful for creating and packaging applications in a way suited to cloud deployment.
 
+### 16.2. The Main class
 
+You may recall we identified three _concerns_ in the sample code provided in the Spring Boot Tutorial:
 
+* The "Hello, World!" functionality
+* The wrapper for the standalone version
+* The wrapper for the RESTful service version
 
+Just now we're addressing the wrapper for the standalone version. It will consist of a Java class that contains a ```main``` method, configured so that the Spring framework can start it.
 
-### 11.1. The Main class
+Should we test-drive this class? Some would say we should test-drive every line of production code we write, no matter what. Others would say this sort of code is basically boilerplate. All it will do is instantiate a ```Hello``` object and call its ```greet()``` method, which takes no arguments. It will also write the output from ```greet()``` to ```stdout```. 
 
-Let's risk the ire of purists and just write this one.
+None of these operations represents unique application logic that we are hand-coding. It all amounts to wiring up some functionality provided by the Java compiler or the JVM. Everything it does will be validated at the integration test level; there's no finer-grained behavior to check at the unit level. Let's just write this one.
 
 ```java  
-package com.nepragma.springboot;
+package com.nepragma.javahelloapp;
 public class Main {	
 	static Hello hello;
 	public static void main(String[] args) {
@@ -104,26 +114,13 @@ public class Main {
 }
 ```
 
-Show them how to run this from inside the IDE. 
+Show them how to run this from inside the IDE and from a command line.
 
 ### 11.2. Create an executable jar
 
 The way to package a standalone Java application is as an _executable jar_. Let's do that using Maven.
 
-One of the advantages of using Springboot is that it comes with a well-implemented Maven plugin to build executable jars. It works better than the usual ```maven-assembly-plugin``` or ```maven-jar-plugin``` that you may have used in the past.
-
-To include it, add this ```plugin``` declaration to the ```pom.xml``` file:
-
-```shell  
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-    </plugins>
-</build>
-```
+One of the advantages of using Spring Boot is that it comes with a well-implemented Maven plugin to build executable jars, ```spring-boot-maven-plugin```. It works better than the usual ```maven-assembly-plugin``` or ```maven-jar-plugin``` that you may have used in the past, or the old ```maven-antrun-plugin``` workaround to run an ```ant``` task out of Maven. The plugin is declared in the sample POM shown above.
 
 You can create the executable jar from the command line like this:
 
@@ -148,12 +145,17 @@ Now you can use that run configuration to create the executable jar from within 
 To execute the resulting application from the command line, use:
 
 ```shell
-java -jar hello-0.0.1-SNAPSHOT.jar
+java -jar target/javahelloapp-0.0.1-SNAPSHOT.jar
 ```
 
 To execute it from within the IDE, open the context menu and choose Run as... Java application.
 
-### 11.4 Create a .gitignore file
+### 11.4 Create a script to run the application
+
+It's not very convenient to type the ```java``` command to run the application. It would be easier if we wrapped the command in a script with an easy-to-remember name, like ```run```. The script is just a one-liner: The ```java``` command. Remember to give it execute permission.
+
+
+### 11.5 Create a .gitignore file
 
 When we imported the project into Spring Tool Suite, some IDE-specific files were created in the project directory that we don't want to store in version control. 
 
@@ -171,57 +173,7 @@ Instead of choosing which files to display, you're choosing which files _not_ to
 
 Show participants how to create a ```.gitignore``` file (or edit the one Springboot generated) to control which files will be committed to version control.
 
-Run a ```git status``` command on the command line to see which files git is watching.
-
-```shell
-git status
-```
-
-When the author tried this on his laptop, the output from ```git status``` was:
-
-```shell  
-On branch master
-Your branch is up-to-date with 'origin/master'.
-Changes not staged for commit:
-  (use "git add/rm <file>..." to update what will be committed)
-  (use "git checkout -- <file>..." to discard changes in working directory)
-
-	modified:   .DS_Store
-	modified:   README.md
-	modified:   pom.xml
-	deleted:    src/main/java/Hello.java
-	deleted:    target/classes/Hello.class
-	modified:   target/maven-archiver/pom.properties
-	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-	modified:   target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-	modified:   target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
-	deleted:    target/myproject-0.0.1-SNAPSHOT.jar
-	modified:   target/surefire-reports/HelloTest.txt
-	modified:   target/surefire-reports/TEST-HelloTest.xml
-	modified:   target/test-classes/HelloTest.class
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-	.classpath
-	.gitignore
-	.project
-	.settings/
-	images/mvn-package-run-config.png
-	src/main/java/com/nepragma/springboot/Main.java
-	src/main/java/com/nepragma/springboot/package-info.java
-	src/test/java/com/
-
-no changes added to commit (use "git add" and/or "git commit -a")
-```
-
-The ```.DS_Store``` file is created by Mac OSX when you access files. We don't need to keep it in version control. If you're using a different operating system, you won't see that filename in the list.
-
-We don't need anything in the ```target``` directory, as that directory is created as part of the build. We only keep sources and resource files under version control.
-
-The files ```.classpath```, ```.project``` and the directory ```.settings``` are generated and used by Spring Tool Suite (actually, by the underlying Eclipse IDE). They are specific to the local development environment and are not part of the application source code, so we don't keep them under version control.
-
-To prevent these files from being stored in git, we put the following entries in ```.gitignore```:
+To prevent unwanted files from being stored in git, we put the following entries in ```.gitignore```:
 
 ```shell  
 .DS_Store
@@ -229,17 +181,14 @@ target
 .classpath
 .project
 .settings
-```
-
-If you're using another operating system, you might see temporary files specific to that system that you'll want to include in ```.gitignore``` as well. For example, when you edit a file on Ubuntu Linux using the default text editor, it creates a temporary file with a tilde on the end of its name. Editing a file named ```MyClass.java``` will cause another file to be created, named ```MyClass.java~```. You can use wildcards in the filenames in ```.gitignore``` to prevent those files from being included:
-
-```shell  
 *~
 ```
 
+If you're using another operating system, you might see temporary files specific to that system that you'll want to include in ```.gitignore``` as well. For example, when you edit a file on Ubuntu Linux using the default text editor, it creates a temporary file with a tilde on the end of its name. Editing a file named ```MyClass.java``` will cause another file to be created, named ```MyClass.java~```. 
+
 You _do_ want the ```.gitignore``` file itself to be maintained under version control.
 
-### 11.5 Commit, push, and build
+### 11.6 Commit, push, and build
 
 Now commit and push the changes and watch the build run in Travis CI.
 
@@ -273,7 +222,7 @@ Because this is a standalone application that runs in a one-off dyno, it will no
 
 ```shell
 heroku run bash --app springboot-tutorial
-~ $ java -jar target/hello-0.0.1-SNAPSHOT.jar
+~ $ java -jar target/javahelloapp-0.0.1-SNAPSHOT.jar
 Hello, World!
 ```
 
@@ -281,26 +230,16 @@ Hello, World!
 
 We've looked at several good development practices so far:
 
-1. Version control [check]
-1. Single branch strategy [check]
-1. Separation of concerns [check]
-1. Test-driven development [check]
-1. Continuous Integration [check]
-1. Static code analysis [not yet]
-1. Automated unit tests [check]
-1. Automated packaging [check]
-1. Automated integration, functional, and system tests [not yet]
-1. Automated deployment [check]
-1. Loose ends - javadoc comments, etc. [not yet]
-
-## 14. Some notes on application components and project structure
-
-The original sample code for the tutorial combines the "business logic" of saying Hello with code to drive a standalone application and code to build a RESTful microservice. We separated the first two components.
-
-In "real life" the ```hello``` jar file would be uploaded to a Nexus repository where it could be referenced as a _dependency_ in other projects. The repository could be the public Maven Central or a corporate repository behind a firewall, where virus-scanned and approved jars are maintained. 
-
-Rather than clutter a repository with jar files from tutorial exercises, we've left the ```hello``` jar as a source-level dependency within the ```springboot-tutorial``` project. 
-
-We'll create a separate project to build the RESTful service wrapper for the ```hello``` jar. For purposes of the tutorial, we'll just copy the ```hello``` code into that project. Bear in mind this is not the way to do things in "real life."
-
-The tutorial continues in http://github.com/neopragma/hello-service.
+* Using Maven for Java projects
+* Separation of concerns
+* Using a version control system
+* Single branch strategy
+* Setting up continuous integration
+* Using an IDE
+* Packaging a reusable jar to be uploaded to a repository
+* Test-driving application code through microtests
+* Benefits of frequent commits
+* Using Spring Boot with Maven 
+* Packaging applications for deployment
+* Setting up continuous deployment
+* Writing a standalone Java application suitable for cloud deployment
