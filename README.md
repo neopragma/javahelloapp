@@ -1,6 +1,6 @@
 # TDD/CI/CD Walkthrough Facilitator's Guide
 
-This project supports part 1 of a 3-part demonstration/walkthrough/dojo exercise. By the end of the series, you'll have a reusable jar containing the "Hello, World!" functionality, a standalone Java app, a RESTful microservice, and a working CI/CD pipeline.
+This project supports part 2 of a 3-part demonstration/walkthrough/dojo exercise. By the end of the series, you'll have a reusable jar containing the "Hello, World!" functionality, a standalone Java app, a RESTful microservice, and a working CI/CD pipeline.
 
 * Part 1 - http://github.com/neopragma/javahellolib 
 * Part 2 - javahelloapp (You are here)
