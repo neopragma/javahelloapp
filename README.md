@@ -45,7 +45,7 @@ We're going to develop a standalone Java application that uses the ```javahellol
 
 ### 16.1 The POM
 
-We want to use Spring Boot to help us package the standalone application for deployment. Our POM will be different from the one we used for the ```javhellolib``` project. Here it is:
+We want to use Spring Boot to help us package the standalone application for deployment. Our POM will be different from the one we used for the ```javahellolib``` project. Here it is:
 
 ```xml 
 <?xml version="1.0" encoding="UTF-8"?>
